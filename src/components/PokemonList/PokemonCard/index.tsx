@@ -13,7 +13,6 @@ type PokemonCardProps = {
 };
 
 export const PokemonCard = ({ id, name, image, types }: PokemonCardProps) => {
-  console.log('', id, name, image, types);
   return (
     <Link href={`/pokemons/${id}`}>
       <div className='flex flex-col items-center h-full min-w-[200px] bg-gray-200 rounded-sm shadow-md'>

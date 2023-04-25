@@ -13,7 +13,7 @@ export default function Home() {
    * returns an array with name and url of the first 25 pokemons
    */
   const fetchPokemonList = async () => {
-    const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=5');
+    const res = await fetch('https://pokeapi.co/api/v2/pokemon?limit=25');
     return res.json();
   };
 
