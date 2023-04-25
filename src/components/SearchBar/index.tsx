@@ -12,7 +12,7 @@ export const SearchBar = ({ setSearchQuery }: SearchBarProps) => {
 
   return (
     <input
-      className='m-4 p-2 w-full text-sm border border-gray-300 rounded-md'
+      className='m-4 p-2 w-full max-w-[846px] text-sm border border-gray-300 rounded-md'
       placeholder='Search pokemon'
       onChange={handleChange}
     />
