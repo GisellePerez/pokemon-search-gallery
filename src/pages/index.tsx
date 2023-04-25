@@ -6,7 +6,6 @@ import { useQueries, useQuery } from 'react-query';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState<string>(''); // state to store the value of the searchbar
-  const [filteredItems, setFilteredItems] = useState<any[]>([]); // state to store the filtered values. By default it will have all items
 
   /**
    * Function to fetch the list of pokemons
@@ -31,7 +30,7 @@ export default function Home() {
    * So, once we have the list of 25 pokemon, we fetch the details for each one of them
    */
   const fetchPokemonDetail = async (id: number) => {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`); 
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     return res.json();
   };
 
@@ -58,33 +57,9 @@ export default function Home() {
    * Return the queries resonses data and store it into an array to use in the grid in the frontend
    */
   const allPokemonsDetailsData = allPokemonsDetails.map((item) => item.data);
-  const completePokemonData = [...allPokemonsDetailsData];
-
-  /**
-   * Initialize array of filtered data with complete list
-   */
-  useEffect(() => {
-    setFilteredItems(completePokemonData);
-  }, []);
-
-  /**
-   * If searchQuery changes, we filter the array of pokemons we display
-   */
-  useEffect(() => {
-    if (completePokemonData) {
-      const filtered: any[] = completePokemonData.filter((p: any) =>
-        p?.name?.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
-      setFilteredItems(filtered);
-    }
-
-    if (!searchQuery) {
-      setFilteredItems(completePokemonData);
-    }
-  }, [searchQuery]);
 
   return (
-    <main className='flex flex-col items-center my-0 mx-auto py-4 px-10 max-w-[1024px]'>
+    <main className='flex flex-col items-center my-0 mx-auto py-4 px-4 md:px-10 max-w-[1024px]'>
       <h1 className='text-3xl font-bold'>Welcome to the pokedex!</h1>
       {pokemonListStatus === 'loading' ? (
         <div className='my-10'>
@@ -96,7 +71,15 @@ export default function Home() {
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
           />
-          <PokemonList items={filteredItems || allPokemonsDetailsData} />
+          <PokemonList
+            items={
+              searchQuery
+                ? allPokemonsDetailsData.filter((p: any) =>
+                    p?.name?.toLowerCase().includes(searchQuery.toLowerCase()),
+                  )
+                : allPokemonsDetailsData
+            }
+          />
         </>
       )}
     </main>
