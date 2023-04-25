@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PokemonList } from '@/components/PokemonList';
 import { SearchBar } from '@/components/SearchBar';
@@ -20,13 +20,10 @@ export default function Home() {
   /**
    * Function that handles the request and caches the responses
    */
-  const { data: pokemonList, status } = useQuery(
+  const { data: pokemonList, status: pokemonListStatus } = useQuery(
     'pokemonList',
     fetchPokemonList,
   );
-
-  console.log({ pokemonList });
-  debugger;
 
   /**
    * Function to fetch the detail of a pokemon
@@ -34,7 +31,7 @@ export default function Home() {
    * So, once we have the list of 25 pokemon, we fetch the details for each one of them
    */
   const fetchPokemonDetail = async (id: number) => {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`); 
     return res.json();
   };
 
@@ -56,14 +53,11 @@ export default function Home() {
    * fetch the pokemon details using useQueries
    */
   const allPokemonsDetails = useQueries(allPokemonQueries || []);
-  console.log('allPokemonsDetails', { allPokemonsDetails });
 
   /**
    * Return the queries resonses data and store it into an array to use in the grid in the frontend
    */
   const allPokemonsDetailsData = allPokemonsDetails.map((item) => item.data);
-  console.log('allPokemonsDetailsData', { allPokemonsDetailsData });
-
   const completePokemonData = [...allPokemonsDetailsData];
 
   /**
@@ -92,10 +86,19 @@ export default function Home() {
   return (
     <main className='flex flex-col items-center my-0 mx-auto py-4 px-10 max-w-[1024px]'>
       <h1 className='text-3xl font-bold'>Welcome to the pokedex!</h1>
-      <SearchBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <PokemonList items={filteredItems || allPokemonsDetailsData} />
-
-      {JSON.stringify(filteredItems)}
+      {pokemonListStatus === 'loading' ? (
+        <div className='my-10'>
+          <span className='animate-ping inline-flex h-[30px] w-[30px] rounded-full bg-red-500 opacity-75'></span>
+        </div>
+      ) : (
+        <>
+          <SearchBar
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
+          <PokemonList items={filteredItems || allPokemonsDetailsData} />
+        </>
+      )}
     </main>
   );
 }
